@@ -12,4 +12,5 @@ install_requires = [
 setup(name=__name__,
       version=__version__,
       author=__author__,
-      install_requires=install_requires)
+      install_requires=install_requires,
+      py_modules=['purse'])
