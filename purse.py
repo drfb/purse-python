@@ -19,6 +19,14 @@ class Purse(object):
     def _url(self, endpoint):
         return "%s/%s" % (self.purse_url, endpoint)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'available_balance': str(self.available_balance),
+        }
+
     def create(self, name=None, description=None, force=False):
         """
         Creates a new purse.
@@ -42,6 +50,23 @@ class Purse(object):
         self.description = data.get('description')
         return self
 
+    def get_wallet(self, id):
+        return Purse(purse_url=self.purse_url, id=id)
+
+    def _set_properties(self, **kwargs):
+        for k, v in kwargs.iteritems():
+            setattr(self, k, v)
+
+    @property
+    def exists(self):
+        """
+        Checks if the wallet exists
+        """
+        r = requests.get(self._url('wallets/%s.json' % self.id))
+        self._set_properties(**r.json())
+        return r.status_code == 200
+
+    @property
     def available_balance(self):
         """
         Gets the available balance.
