@@ -78,7 +78,11 @@ class Purse(object):
         """
         Adds balance to the current purse.
         """
-        raise NotImplementedError
+        data = {
+            'amount': amount
+        }
+        r = requests.post(self._url('wallets/%s/topup' % self.id), data=data)
+        return Decimal(r.json().get('balance'))
 
     def charge(self, amount, expiry=None):
         """
